@@ -1,0 +1,49 @@
+<!--
+    Colton Shoenberger, cs3585@drexel.edu
+    CS530: DUI, Final Project
+-->
+
+{% extends 'base.html' %}
+{% set active = "Login" %}
+
+{% block title %}
+Log In
+{% endblock %}
+
+{% block content %}
+
+<div class="container content">
+    <h1>Log In</h1>
+
+    <p>
+        Please log in with your credentials below. If you are a new user, please
+        <a href="/create_user">create an account</a>.
+    </p>
+    
+    {% if message %}
+    <div class="alert alert-danger">
+        {{ message }}
+    </div>
+    {% endif %}
+
+    <!-- Login Form -->
+    <div class="form-wrapper">
+        <form method="POST" action="/login">
+            <div class="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input class="form-control" type="text" name="username" maxlength="20" placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input class="form-control" type="password" name="password" maxlength="20" placeholder="Enter password">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

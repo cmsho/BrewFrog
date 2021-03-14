@@ -1,0 +1,291 @@
+<!--
+    Colton Shoenberger, cs3585@drexel.edu
+    CS530: DUI, Final Project
+-->
+
+{% extends 'base.html' %}
+{% set active = "Home" %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+    <!-- Sidebar -->
+    <nav id="sidebar">
+
+        <div class="sidebar-header">
+            <h3>Find Your Perfect Beer!</h3>
+        </div>
+
+        <ul class="list-unstyled components">
+            <h4>Filters</h4>
+
+            <!-- Filters form -->
+            <div class="formwrapper">
+                {% from "_formhelpers.html" import render_field %}
+                <form method=post action="/">
+                    <!--
+                        TODO:
+                        The code below represents a filter for the desired "style" of beer
+                        It is currently not included because I am an SQL novice
+                        and can't figure out an efficient way to query the DB with this filter
+
+                        Maybe I need to break the SQL query into several possible strings that get concatenated...
+                    -->
+                    <!-- <li>
+                        <a href="#styleSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Style</a>
+                        <ul class="collapse list-unstyled" id="styleSubmenu">
+                                <form action="/style" method="POST">
+                                    <input type="checkbox" id="ipa" name="style" value="ipa">
+                                    <label for="ipa">IPA</label><br>
+                                    <input type="checkbox" id="lager" name="style" value="lager">
+                                    <label for="ipa">Lager</label><br>
+                                    <input type="checkbox" id="paleAle" name="style" value="paleAle">
+                                    <label for="ipa">Pale Ale</label><br>
+                                    <input type="checkbox" id="whiteAle" name="style" value="whiteAle">
+                                    <label for="ipa">White Ale</label><br>
+                                    <input type="checkbox" id="wheatAle" name="style" value="wheatAle">
+                                    <label for="ipa">Wheat Ale</label><br>
+                                    <input type="checkbox" id="marzen" name="style" value="marzen">
+                                    <label for="ipa">Marzen</label><br>
+                                    <input type="checkbox" id="stout" name="style" value="stout">
+                                    <label for="ipa">Stout</label><br>
+                                    <input class="submit" type="submit" value="Submit"></input>
+                                </form>
+                        </ul>
+                    </li> -->
+
+                    <li>
+                        <a href="#abvSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">ABV</a>
+                        <ul class="collapse list-unstyled" id="abvSubmenu">
+                            <div class="form-group filter">
+                                <dl>
+                                    {{ render_field(form.abvMin) }}
+                                    {{ render_field(form.abvMax) }}
+                                </dl>
+                            </div>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="#ibuSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">IBU</a>
+                        <ul class="collapse list-unstyled" id="ibuSubmenu">
+                            <div class="form-group filter">
+                                <dl>
+                                    {{ render_field(form.ibuMin) }}
+                                    {{ render_field(form.ibuMax) }}
+                                </dl>
+                            </div>
+                        </ul>
+                    </li>
+                    
+                    <li>
+                        <a href="#calSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Calories</a>
+                        <ul class="collapse list-unstyled" id="calSubmenu">
+                            <div class="form-group filter">
+                                <dl>
+                                    {{ render_field(form.calMin) }}
+                                    {{ render_field(form.calMax) }}
+                                </dl>
+                            </div>
+                        </ul>
+                    </li>
+                    <div class="form-group">
+                        <button type=submit class="btn btn-primary">Submit</button>
+                    </div>
+
+                </form>
+            </div>
+        </ul>
+    </nav>
+
+    <!-- Content -->
+    <div class="container">
+        <section class="jumbotron">
+        
+            <div class="text-center">
+                <h1 class="jumbotron-heading">BrewFrog</h1>
+                <p class="lead text-muted">Love beer? We're here for you!</p>
+            </div>
+            
+    
+            <div id="cards" class="container justify-content-center"></div>
+    
+            <nav>
+                <ul id="paginator" class="pagination justify-content-center">
+                </ul>
+            </nav>
+    
+            
+    
+        </section>
+    </div>
+</div>
+
+<!-- JavaScript -->
+
+<!-- Sidebar -->
+<script type="text/javascript">
+    $(document).ready(function () {
+    
+        $("#sidebar").mCustomScrollbar({
+            theme: "minimal"
+        });
+
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+            $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+        });
+    });
+    </script>
+
+<!-- Beer API -->
+<!-- Not in it's own .js file because it is taking parameters provided from Flask @app.route
+     There is probably a way to serve these through to a separate .js file...
+     But I haven't figured that out yet.-->
+<script type="text/javascript">
+
+    // Pages
+    const beersPerColumn = 3;
+    const beersPerPage = 3;
+    var currentPage = 1;
+
+    // Filter values
+    let abvMin = '{{ abvMin }}';
+    let abvMax = '{{ abvMax }}';
+    let ibuMin = '{{ ibuMin }}';
+    let ibuMax = '{{ ibuMax }}';
+    let calMin = '{{ calMin }}';
+    let calMax = '{{ calMax }}';
+
+    // Make cards for each beer
+    function buildCards(beers) {
+        $('#cards').empty();
+        if (beers.length != 0) {
+            for (var i = 0; i < beers.length; i++) {
+                let beer = beers[i];
+                let card = $('<div>').addClass('card')
+                    .append(
+                        $('<img>').addClass('card-img-top').attr('src', '/img/beer/' + beer.image)
+                    ).append(
+                        $('<p>').addClass('card-body')
+                            .append(
+                                $('<h5>').addClass('card-title').text(beer.name)
+                            ).append(
+                                $('<p>').addClass('card-text').text(beer.brewery)
+                            ).append(
+                                $('<p>').addClass('card-text').text('Style: ' + beer.style)
+                            ).append(
+                                $('<p>').addClass('card-text').text('ABV: ' + beer.abv)
+                            ).append(
+                                $('<p>').addClass('card-text').text('IBUs: ' + beer.ibu)
+                            ).append(
+                                $('<p>').addClass('card-text').text('Calories: ' + beer.calories)
+                            ).append(
+                                $('<a>').addClass('btn btn-primary').text('Favorite')
+                                    .click(function () {
+                                        favoriteBeer(beer.uid);
+                                    })
+                            )
+                    );
+
+                if (i % beersPerColumn == 0)
+                    $('#cards').append(
+                        $('<div>').addClass('card-deck')
+                    );
+                $('#cards .card-deck').last().append(card);
+            }
+            while ($('#cards .card-deck:last .card').length < beersPerColumn)
+                $('#cards .card-deck').last().append($('<div>').addClass('card'));
+        }
+        else{
+            $('#cards').append(
+                $('<p>').addClass('alert d-flex justify-content-center').text('No results found!')
+        )}
+    }
+
+    // Pagination functions
+    function createPageLink(text, toPage, active, disabled) {
+        
+        let link = $('<li>').addClass('page-item').append(
+            $('<a>').addClass('page-link').text(text).click(function () {
+                currentPage = toPage;
+                loadBeers();
+            })
+        );
+        if (active)
+            link.addClass('active');
+        if (disabled)
+            link.addClass('disabled');
+        return link;
+    }
+
+    function updatePagination(total) {
+        if (total != 0) {
+            let pages = Math.ceil(total / beersPerPage);
+            $('#paginator').empty().append(
+                createPageLink('Previous', currentPage - 1, false, currentPage == 1)
+            );
+            for (var page = 1; page <= pages; page++)
+                $('#paginator').append(
+                    createPageLink(page, page, page == currentPage, false)
+                );
+            $('#paginator').append(
+                createPageLink('Next', currentPage + 1, false, currentPage == pages)
+            );
+        }
+    }
+
+    function updatePage(data) {
+        buildCards(data.beer);
+        updatePagination(data.total);
+    }
+
+    // Load beers that meet the search criteria
+    // based on values from the "filters" form
+    // 
+    // Computed with a single SQL query
+    // Probably not the best way to do it
+    // But it works for now
+    function loadBeers() {
+        $.get("api/beer", {
+            n: beersPerPage,
+            offset: (currentPage - 1) * beersPerPage,
+            abvMin: abvMin,
+            abvMax: abvMax,
+            ibuMin: ibuMin,
+            ibuMax: ibuMax,
+            calMin: calMin,
+            calMax: calMax
+        }, function (data) {
+            updatePage(data);
+        });
+    }
+
+    // TODO: Redirect to /login if user not in session
+    function favoriteBeer(uid) {
+        $.get("api/add_favorite", {
+            uid: uid,
+            n: beersPerPage,
+            offset: (currentPage - 1) * beersPerPage,
+            abvMin: abvMin,
+            abvMax: abvMax,
+            ibuMin: ibuMin,
+            ibuMax: ibuMax,
+            calMin: calMin,
+            calMax: calMax
+        }, function (data) {
+            updatePage(data);
+        });
+    }
+
+    // Init loading the beers when page opens
+    $(function () {
+        loadBeers();
+    });
+</script>
+
+{% endblock %}

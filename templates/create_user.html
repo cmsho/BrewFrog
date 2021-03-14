@@ -1,0 +1,46 @@
+<!--
+    Colton Shoenberger, cs3585@drexel.edu
+    CS530: DUI, Final Project
+-->
+
+{% extends 'base.html' %}
+{% set active = "Create User" %}
+
+{% block title %}
+Login
+{% endblock %}
+
+{% block content %}
+
+<div class="container content">
+    <h1>Create User</h1>
+
+    <p>
+        Please specify a new username and password below.
+    </p>
+
+    <!-- Create User form-->
+    <form method="POST" action="/create_user">
+        <div class="login-form">
+            <div class="form-group">
+                <label for="name">Your Name</label>
+                <input class="form-control" type="text" name="name" maxlength="40" placeholder="Enter your name">
+            </div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input class="form-control" type="text" name="username" maxlength="20" placeholder="Enter username">                
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input class="form-control" type="password" name="password" maxlength="20" placeholder="Enter password">              
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+            
+        </div>
+    </form>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,26 @@
+<!--
+    Colton Shoenberger, cs3585@drexel.edu
+    CS530: DUI, Final Project
+-->
+
+{% extends 'base.html' %}
+{% set active = "About" %}
+
+{% block title %}
+About
+{% endblock %}
+
+{% block content %}
+
+<div class="container content">
+    <h1>About BrewFrog</h1>
+    <p>BrewFrog is a concept for a web app that makes it easier to compare beers.  
+    Users can choose from various filtering options to find beers they are interested in, 
+    and they can view side-by-side comparisons of beers against criteria including style, ABV, IBU, calorie count, and user ratings.</p>
+    <div class="d-flex justify-content-center">
+        <img class="img-responsive" src="/img/brewfrog.png" alt="Brewfrog logo" style="max-width: 300px">
+    </div>
+</div>
+
+
+{% endblock %}

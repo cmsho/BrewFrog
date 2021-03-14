@@ -1,0 +1,35 @@
+sqlite3 beer.db
+
+DROP TABLE beer;
+DROP TABLE users;
+DROP TABLE favorites;
+
+CREATE TABLE beer (
+uid INTEGER PRIMARY KEY,
+name TEXT NOT NULL,
+brewery TEXT,
+style TEXT,
+abv REAL,
+ibu INTEGER,
+calories INTEGER,
+image TEXT
+);
+.mode csv
+.import dev/beer.csv beer
+
+CREATE TABLE users (
+    uid INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    username TEXT NOT NULL UNIQUE,
+    encrypted_password TEXT NOT NULL
+);
+
+CREATE TABLE favorites (
+    user_id INTEGER,
+    beer_id INTEGER,
+    FOREIGN KEY(user_id) REFERENCES users(uid),
+    FOREIGN KEY(beer_id) REFERENCES beer(uid),
+    UNIQUE(user_id,beer_id)
+);
+
+.quit

@@ -1,0 +1,36 @@
+<!--
+    Colton Shoenberger, cs3585@drexel.edu
+    CS530: DUI, Final Project
+-->
+
+{% extends 'base.html' %}
+{% set active = "Account" %}
+
+{% block title %}
+My beers
+{% endblock %}
+
+{% block content %}
+
+<div class="content">
+    <section class="jumbotron">
+        <div class="text-center">
+            <h1>My beers</h1>
+            <p>Here's a list of your favorite beers!</p>
+            
+            <div id="cards" class="container">
+            </div>
+        
+            <nav>
+                <ul id="paginator" class="pagination justify-content-center">
+                </ul>
+            </nav>
+            
+            <!-- External JS file for loading favorites list-->
+            <script src='/js/favorites.js'> </script>
+        </div>
+    </section>
+
+</div>
+
+{% endblock %}
