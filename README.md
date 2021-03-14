@@ -1,7 +1,5 @@
 # BrewFrog
-* BrewFrog is a Python web application that I created for the course "Developing User Interfaces" at Drexel University in 2020.
-* BrewFrog allows users to view a catalogue of beers, filter through the catalogue, and add selected beers to their favorites page if they are logged in.
-* The site utilizes an SQLite3 database with tables for users and beers.  The site includes simple, secure user authentication.
+BrewFrog is a Python web application that I created for the course "Developing User Interfaces" at Drexel University in 2020.  BrewFrog allows users to view a catalogue of beers, filter through the catalogue, and add selected beers to their favorites page if they are logged in.  The site utilizes an SQLite3 database with tables for users and beers.  The site includes simple, secure user authentication.
 
 # Project Dependencies
 This project requires Python3, Flask, and WTForms.
