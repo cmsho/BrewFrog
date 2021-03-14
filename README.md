@@ -8,8 +8,8 @@ This project requires Python3, Flask, and WTForms.
 * To install WTForms, run 'pip install WTForms' on the command line.
 
 # Deployment
-To run the program run 'python3 run.py' on the command line from the BrewFrog directory.
-* This will initialize the Flask server.  Once the Flask server is running, open a web browser and navigate to "localhost:8080" to view the BrewFrog site.
+* To run the program run 'python3 run.py' on the command line from the BrewFrog directory.  This will initialize the Flask server.
+* Once the Flask server is running, open a web browser and navigate to "localhost:8080" to view the BrewFrog site.
 
 # Additional Remarks
 A research report that I wrote to accompany the project can be found in the 'docs' folder.
